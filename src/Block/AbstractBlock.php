@@ -1,0 +1,55 @@
+<?php
+
+
+namespace Adeliom\EasyBlockBundle\Block;
+
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class AbstractBlock extends AbstractType
+{
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $manager;
+
+    public function __construct(EntityManagerInterface $manager)
+    {
+        $this->manager = $manager;
+    }
+
+    /**
+     * @return EntityManagerInterface
+     */
+    public function getManager(): EntityManagerInterface
+    {
+        return $this->manager;
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add("block_type", HiddenType::class, ["data" => get_class($this)])
+            ->add("position", HiddenType::class)
+            ;
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $attr["block-title"] = $this->getName();
+        $attr["block-icon"] = $this->getIcon();
+        $view->vars['attr'] = $attr;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'cascade_validation' => true,
+        ]);
+    }
+}

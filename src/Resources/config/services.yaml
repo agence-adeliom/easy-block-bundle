@@ -1,0 +1,37 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    _instanceof:
+        Adeliom\EasyBlockBundle\Block\BlockInterface:
+            tags: [ 'easy_block.block' ]
+
+    Adeliom\EasyBlockBundle\Block\BlockCollection:
+        autoconfigure: true
+        public: true
+        arguments:
+            - !tagged easy_block.block
+
+    easy_block.block_collection:
+        alias: Adeliom\EasyBlockBundle\Block\BlockCollection
+
+    Adeliom\EasyBlockBundle\Blocks\:
+        resource: '../../Blocks/'
+
+    Adeliom\EasyBlockBundle\Twig\EasyBlockExtension:
+        public: true
+        tags:
+            - { name: twig.extension }
+
+    easy_block.twig_extension:
+        alias: Adeliom\EasyBlockBundle\Twig\EasyBlockExtension
+
+    Adeliom\EasyBlockBundle\Editor\SharedBlockType:
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@translator.default"
+            - "%easy_block.class%"
+        tags: [ 'easy_editor.block' ]
+
+

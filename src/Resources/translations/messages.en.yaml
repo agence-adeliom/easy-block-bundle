@@ -1,0 +1,34 @@
+easy:
+  block:
+    editor:
+      shared_block: "Shared block"
+    admin:
+      crud:
+        title:
+          shared_block:
+            edit: Shared block edition
+            index: Shared blocks list
+            new: New shared block
+            detail: Shared block details
+        label:
+          shared_block:
+            singular: shared block
+            plural: shared blocks
+            new: New shared block
+            edit: Edit
+            delete: Delete
+            saveAndReturn: Save and return
+            saveAndContinue: Save and continue
+            saveAndAddAnother: Save and add another
+      menu:
+        shared_blocks: Shared blocks
+      panel:
+        information: Informations
+        metadatas: Metadatas
+        seo: SEO
+        publication: Publication
+      field:
+        name: "Block name"
+        type: "Type"
+        status: "Status"
+        settings_section: "Parameters"
