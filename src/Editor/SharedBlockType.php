@@ -46,7 +46,7 @@ class SharedBlockType extends AbstractBlock implements BlockInterface
         return new CallbackTransformer(
             function ($data) {
                 if ($data && $data["block"]){
-                    $data["block"] = $this->manager->getRepository($data["block"]["class"])->find($data["block"]["id"]);;
+                    $data["block"] = $this->manager->getRepository($data["block"]["class"])->find($data["block"]["id"]);
                 }
                 return $data;
             },
