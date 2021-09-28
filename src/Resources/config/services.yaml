@@ -16,9 +16,6 @@ services:
     easy_block.block_collection:
         alias: Adeliom\EasyBlockBundle\Block\BlockCollection
 
-    Adeliom\EasyBlockBundle\Blocks\:
-        resource: '../../Blocks/'
-
     Adeliom\EasyBlockBundle\Twig\EasyBlockExtension:
         public: true
         tags:

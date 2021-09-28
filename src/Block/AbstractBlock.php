@@ -37,7 +37,10 @@ class AbstractBlock extends AbstractType
             ->add("block_type", HiddenType::class, ["data" => get_class($this)])
             ->add("position", HiddenType::class)
             ;
+        $this->buildBlock($builder, $options);
     }
+
+    public abstract function buildBlock(FormBuilderInterface $builder, array $options): void;
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
