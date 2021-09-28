@@ -25,7 +25,11 @@ class SharedBlockType extends AbstractBlock implements BlockInterface
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
+        $builder->addModelTransformer($this->getTransformer());
+    }
 
+    public function buildBlock(FormBuilderInterface $builder, array $options): void
+    {
         $builder
             ->add("block", EntityType::class, [
                 "class" => $this->class,
@@ -38,8 +42,6 @@ class SharedBlockType extends AbstractBlock implements BlockInterface
                 ]
             ])
         ;
-
-        $builder->addModelTransformer($this->getTransformer());
     }
 
     public function getTransformer(){
