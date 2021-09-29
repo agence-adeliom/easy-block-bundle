@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AbstractBlock extends AbstractType
+abstract class AbstractBlock extends AbstractType
 {
     /**
      * @var EntityManagerInterface
