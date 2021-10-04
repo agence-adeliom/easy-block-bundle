@@ -31,4 +31,10 @@ services:
             - "%easy_block.class%"
         tags: [ 'easy_editor.block' ]
 
-
+    easy_block.maker.make_shared_block:
+        class: Adeliom\EasyBlockBundle\Maker\MakeSharedBlock
+        public: false
+        arguments:
+            - '@maker.file_manager'
+        tags:
+            - { name: maker.command }
