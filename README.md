@@ -21,8 +21,6 @@ Install with composer
 composer require agence-adeliom/easy-block-bundle
 ```
 
-## Documentation
-
 ### Setup database
 
 #### Using doctrine migrations
@@ -37,6 +35,8 @@ php bin/console doctrine:migration:migrate
 ```bash
 php bin/console doctrine:schema:update --force
 ```
+
+## Documentation
 
 ### Integration into EasyAdmin
 
