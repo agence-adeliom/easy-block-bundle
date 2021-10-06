@@ -1,6 +1,7 @@
 {
     "name": "agence-adeliom/easy-block-bundle",
     "type": "symfony-bundle",
+    "version": "1.0.0",
     "description": "A Symfony bundle for EasyAdmin that provide basic blocks components",
     "keywords": ["symfony", "easyadmin", "blocks"],
     "homepage": "https://github.com/agence-adeliom/easy-block-bundle",
