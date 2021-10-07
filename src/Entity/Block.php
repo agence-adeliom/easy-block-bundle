@@ -27,6 +27,15 @@ class Block {
     /**
      * @var string
      *
+     * @ORM\Column(name="block_key", type="string", nullable=false, unique=true)
+     * @Assert\NotBlank
+     * @Assert\Type("string")
+     */
+    protected $key;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="type", type="string", nullable=false)
      * @Assert\NotBlank
      * @Assert\Type("string")
@@ -46,6 +55,24 @@ class Block {
         $this->__TimestampableConstruct();
         $this->settings = [];
     }
+
+    /**
+     * @return string
+     */
+    public function getKey(): string
+    {
+        return $this->key;
+    }
+
+    /**
+     * @param string $key
+     */
+    public function setKey(string $key)
+    {
+        $this->key = $key;
+    }
+
+
 
     /**
      * @return string

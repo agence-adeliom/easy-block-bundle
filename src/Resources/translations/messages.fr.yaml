@@ -30,5 +30,6 @@ easy:
       field:
         name: "Nom du bloc"
         type: "Type"
+        key: "Clé"
         status: "Statut"
         settings_section: "Paramètres"

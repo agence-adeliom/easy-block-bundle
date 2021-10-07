@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 
@@ -89,7 +90,8 @@ abstract class BlockCrudController extends AbstractCrudController
             $blockType = $subject->getInstance()->getType();
         }
 
-        yield TextField::new('name', "easy.block.admin.field.name")->setRequired(true)->setColumns(8);
+        yield TextField::new('name', "easy.block.admin.field.name")->setRequired(true)->setColumns(4);
+        yield SlugField::new('key', "easy.block.admin.field.key")->setRequired(true)->setColumns(4)->hideWhenUpdating()->setTargetFieldName("name");
         yield TextField::new('type', "easy.block.admin.field.type")->setRequired(true)->setColumns(4)->setFormTypeOption('disabled','disabled');
         yield BooleanField::new('status', "easy.block.admin.field.status")->setColumns(12);
 

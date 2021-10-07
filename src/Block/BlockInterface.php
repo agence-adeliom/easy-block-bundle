@@ -9,5 +9,6 @@ interface BlockInterface
     public function getDescription(): string;
     public function getIcon(): string;
     public function getTemplate(): string;
+    public static function configureAssets(): array;
     public static function getDefaultSettings(): array;
 }

@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-abstract class AbstractBlock extends AbstractType
+abstract class AbstractBlock extends AbstractType implements BlockInterface
 {
     /**
      * @var EntityManagerInterface
@@ -54,5 +54,14 @@ abstract class AbstractBlock extends AbstractType
         $resolver->setDefaults([
             'cascade_validation' => true,
         ]);
+    }
+
+    public static function configureAssets(): array
+    {
+        return [
+            "js" => [],
+            "css" => [],
+            "webpack" => [],
+        ];
     }
 }

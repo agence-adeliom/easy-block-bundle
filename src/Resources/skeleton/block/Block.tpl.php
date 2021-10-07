@@ -26,4 +26,14 @@ class <?= $class_name; ?> extends AbstractBlock<?= "\n" ?>
     {
         return "<?= $template_name ?>";
     }
+
+    public function getDescription(): string
+    {
+        return '';
+    }
+
+    public static function getDefaultSettings(): array
+    {
+        return [];
+    }
 }

@@ -91,7 +91,7 @@ class ArticleCrudController extends AbstractCrudController
 #### Twig template
 
 ```twig
-{{ render_easy_block(block) }}
+{{ easy_block(block) }}
 ```
 
 ### Create a new type

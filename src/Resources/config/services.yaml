@@ -38,3 +38,25 @@ services:
             - '@maker.file_manager'
         tags:
             - { name: maker.command }
+
+    Adeliom\EasyBlockBundle\Block\Helper:
+        public: true
+        arguments:
+            - '@twig'
+            - '@event_dispatcher'
+            - '@easy_block.block_collection'
+            - '@doctrine.orm.entity_manager'
+            - '%easy_block.class%'
+        tags:
+            - { name: twig.runtime }
+
+    easy_block.block_helper:
+        alias: Adeliom\EasyBlockBundle\Block\Helper
+
+    Adeliom\EasyBlockBundle\DataCollector\BlockCollector:
+        arguments:
+            - "@easy_block.block_helper"
+        tags:
+            - name: data_collector
+              template: '@EasyBlock/profiler/collector.html.twig'
+              id: Adeliom\EasyBlockBundle\DataCollector\BlockCollector
