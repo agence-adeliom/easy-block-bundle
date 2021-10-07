@@ -91,7 +91,14 @@ class ArticleCrudController extends AbstractCrudController
 #### Twig template
 
 ```twig
+# block is an entity object
 {{ easy_block(block) }}
+
+# render with extra data
+{{ easy_block(block, extra) }}
+
+# render by key
+{{ easy_block(key, extra) }}
 ```
 
 ### Create a new type
