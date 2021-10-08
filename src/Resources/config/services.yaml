@@ -47,6 +47,7 @@ services:
             - '@easy_block.block_collection'
             - '@doctrine.orm.entity_manager'
             - '%easy_block.class%'
+            - '@form.factory'
         tags:
             - { name: twig.runtime }
 
