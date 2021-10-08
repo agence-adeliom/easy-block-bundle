@@ -90,7 +90,7 @@ class ArticleCrudController extends AbstractCrudController
 
 #### Twig template
 
-```twig
+```php
 # block is an entity object
 {{ easy_block(block) }}
 
