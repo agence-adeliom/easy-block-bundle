@@ -234,9 +234,11 @@ class Helper
         // Put norm datas into block settings
         // norm data are transfomed data
         $blockSettings = $form->getNormData();
-        foreach ($form->getNormData() as $field => $value) {
-            if (!empty($form->get($field))) {
-                $blockSettings[$field] = $form->get($field)->getNormData();
+        if (!empty($form->getNormData())) {
+            foreach ($form->getNormData() as $field => $value) {
+                if (!empty($form->get($field))) {
+                    $blockSettings[$field] = $form->get($field)->getNormData();
+                }
             }
         }
 
