@@ -11,5 +11,5 @@ interface BlockInterface
     public function getTemplate(): string;
     public static function configureAssets(): array;
     public static function getDefaultSettings(): array;
-    public static function adminAssets(): array;
+    public static function getAdminAssets(): array;
 }

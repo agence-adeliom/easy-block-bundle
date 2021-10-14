@@ -36,4 +36,12 @@ class <?= $class_name; ?> extends AbstractBlock<?= "\n" ?>
     {
         return [];
     }
+
+    public static function getAdminAssets(): array
+    {
+        return [
+            'js' => [],
+            'css' => []
+        ];
+    }
 }
