@@ -5,9 +5,11 @@ namespace Adeliom\EasyBlockBundle\Controller;
 use Adeliom\EasyBlockBundle\Admin\Field\BlockSettingsField;
 use Adeliom\EasyBlockBundle\Block\BlockCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\AssetDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
@@ -88,6 +90,22 @@ abstract class BlockCrudController extends AbstractCrudController
 
         if($subject->getInstance() && $subject->getInstance()->getType()){
             $blockType = $subject->getInstance()->getType();
+        }
+
+        if (!empty($blockType)) {
+            if (method_exists($blockType,'adminAssets')){
+                $assets = call_user_func([$blockType,'adminAssets']);
+                if(!empty($assets['js'])){
+                    foreach ($assets['js'] as $file){
+                        $context->getAssets()->addJsAsset(new AssetDto($file));
+                    }
+                }
+                if(!empty($assets['css'])){
+                    foreach ($assets['css'] as $file){
+                        $context->getAssets()->addCssAsset(new AssetDto($file));
+                    }
+                }
+            }
         }
 
         yield TextField::new('name', "easy.block.admin.field.name")->setRequired(true)->setColumns(4);
