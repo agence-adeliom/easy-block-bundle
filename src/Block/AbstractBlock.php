@@ -64,4 +64,12 @@ abstract class AbstractBlock extends AbstractType implements BlockInterface
             "webpack" => [],
         ];
     }
+
+    public static function configureAdminAssets(): array
+    {
+        return [
+            'js' => [],
+            'css' => [],
+        ];
+    }
 }
