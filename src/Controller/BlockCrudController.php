@@ -93,8 +93,8 @@ abstract class BlockCrudController extends AbstractCrudController
         }
 
         if (!empty($blockType)) {
-            if (method_exists($blockType,'adminAssets')){
-                $assets = call_user_func([$blockType,'adminAssets']);
+            if (method_exists($blockType,'configureAdminAssets')){
+                $assets = call_user_func([$blockType,'configureAdminAssets']);
                 if(!empty($assets['js'])){
                     foreach ($assets['js'] as $file){
                         $context->getAssets()->addJsAsset(new AssetDto($file));
