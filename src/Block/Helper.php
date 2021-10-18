@@ -209,7 +209,8 @@ class Helper
         $stats["type"] = get_class($blockType);
         $stats["assets"] = $result->getArgument('assets') ?: [];
 
-        $this->assets = array_merge($this->assets, $stats["assets"]);
+        $this->assets = array_merge_recursive($this->assets, $stats["assets"]);
+
         $this->stopTracing($stats["id"], $stats);
 
         // Render
@@ -229,7 +230,7 @@ class Helper
 
         // Submit to use optionnal form transformers
         $form = $formBuilder->getForm();
-        $form->submit(array_merge($defaultSetting, $block->getSettings()));
+        $form->setData(array_merge($defaultSetting, $block->getSettings()));
 
         // Put norm datas into block settings
         // norm data are transfomed data

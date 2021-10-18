@@ -37,54 +37,62 @@
     <h2>Easy Block</h2>
 
     {% for id, block in collector.blocks %}
-    <table>
-        <tbody>
-        <tr>
-            <th class="font-normal text-small text-bold">Name</th>
-            <td>{{ block.name }}</td>
-        </tr>
-        <tr>
-            <th class="font-normal text-small text-bold">Type</th>
-            <td>{{ block.type }}</td>
-        </tr>
-        <tr>
-            <th class="font-normal text-small text-bold">Key</th>
-            <td>{{ block.key }}</td>
-        </tr>
-
-        <tr>
-            <th>Default settings</th>
-            <td>
-                {{ dump(block.defaultSettings) }}
-            </td>
-        </tr>
-
-        <tr>
-            <th>Settings</th>
-            <td>
-                {{ dump(block.settings) }}
-            </td>
-        </tr>
-
-        <tr>
-            <th>Extra settings</th>
-            <td>
-                {{ dump(block.extra) }}
-            </td>
-        </tr>
-
-        {% if block.assets.js|length > 0 or block.assets.css|length > 0 or block.assets.webpack|length > 0  %}
+        <table>
+            <tbody>
             <tr>
-                <th>Assets</th>
+                <th class="font-normal text-small text-bold">Name</th>
+                <td>{{ block.name }}</td>
+            </tr>
+            <tr>
+                <th class="font-normal text-small text-bold">Type</th>
+                <td>{{ block.type }}</td>
+            </tr>
+            <tr>
+                <th class="font-normal text-small text-bold">Key</th>
+                <td>{{ block.key }}</td>
+            </tr>
+
+            <tr>
+                <th>Default settings</th>
                 <td>
-                    <span class="font-normal text-small text-bold">Javascripts :</span><pre>{{ block.assets.js|json_encode() }}</pre><br />
-                    <span class="font-normal text-small text-bold">Stylesheets :</span><pre>{{ block.assets.css|json_encode() }}</pre><br />
-                    <span class="font-normal text-small text-bold">Webpack :</span><pre>{{ block.assets.webpack|json_encode() }}</pre>
+                    {{ dump(block.defaultSettings) }}
                 </td>
             </tr>
-        {% endif %}
-        </tbody>
-    </table>
+
+            <tr>
+                <th>Settings</th>
+                <td>
+                    {{ dump(block.settings) }}
+                </td>
+            </tr>
+
+            <tr>
+                <th>Extra settings</th>
+                <td>
+                    {{ dump(block.extra) }}
+                </td>
+            </tr>
+
+            {% if (block.assets.js is defined and block.assets.js|length > 0) or
+                (block.assets.css is defined and block.assets.css|length > 0) or
+                (block.assets.webpack is defined and block.assets.webpack|length > 0)  %}
+                <tr>
+                    <th>Assets</th>
+                    <td>
+                        {% if block.assets.js is defined %}
+                            <span class="font-normal text-small text-bold">Javascripts :</span><pre>{{ block.assets.js|json_encode() }}</pre><br />
+                        {% endif %}
+                        {% if block.assets.css is defined %}
+                            <span class="font-normal text-small text-bold">Stylesheets :</span><pre>{{ block.assets.css|json_encode() }}</pre><br />
+                        {% endif %}
+                        {% if block.assets.webpack is defined %}
+                            <span class="font-normal text-small text-bold">Webpack :</span><pre>{{ block.assets.webpack|json_encode() }}</pre><br />
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
     {% endfor %}
 
 {% endblock %}
