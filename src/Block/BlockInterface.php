@@ -12,4 +12,5 @@ interface BlockInterface
     public static function configureAssets(): array;
     public static function getDefaultSettings(): array;
     public static function configureAdminAssets(): array;
+    public static function configureAdminFormTheme(): array;
 }

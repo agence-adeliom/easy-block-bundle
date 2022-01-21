@@ -106,6 +106,13 @@ abstract class BlockCrudController extends AbstractCrudController
                     }
                 }
             }
+
+            if (method_exists($blockType,'configureAdminFormTheme')){
+                $formThemes = call_user_func([$blockType,'configureAdminFormTheme']);
+                if(!empty($formThemes) && $context->getCrud()){
+                    $context->getCrud()->setFormThemes(array_merge($context->getCrud()->getFormThemes(), $formThemes));
+                }
+            }
         }
 
         yield TextField::new('name', "easy.block.admin.field.name")->setRequired(true)->setColumns(4);

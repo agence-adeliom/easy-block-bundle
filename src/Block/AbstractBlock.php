@@ -72,4 +72,9 @@ abstract class AbstractBlock extends AbstractType implements BlockInterface
             'css' => [],
         ];
     }
+
+    public static function configureAdminFormTheme(): array
+    {
+        return [];
+    }
 }
