@@ -175,6 +175,16 @@ class Helper
         // Tranform settings way 1 : use blockType form transformers
         $blockSettings = $this->transformSettingsWithBlockTypeFormBuild($blockType, $block, $defaultSetting);
 
+        // Add a way to automatically set an ID (base on loop index when the page is rendered)
+        if (empty($blockSettings['attr_id'])) {
+            global $blockLoopIndex;
+            if (empty($blockLoopIndex)) {
+                $blockLoopIndex = 0;
+            }
+            $blockLoopIndex++;
+            $blockSettings['attr_id'] = 'block-' . $blockLoopIndex;
+        }
+
         // Tranform settings way 2 : with dispatch / event listeners
         $event = new GenericEvent(null, [
             'datas' => $datas,
