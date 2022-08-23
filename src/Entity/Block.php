@@ -9,53 +9,41 @@ use Adeliom\EasyCommonBundle\Traits\EntityTimestampableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\HasLifecycleCallbacks()
- * @ORM\MappedSuperclass(repositoryClass="Adeliom\EasyBlockBundle\Repository\BlockRepository")
- */
-class Block {
-
-
+#[ORM\HasLifecycleCallbacks]
+#[ORM\MappedSuperclass(repositoryClass: 'Adeliom\EasyBlockBundle\Repository\BlockRepository')]
+class Block
+{
     use EntityIdTrait;
     use EntityTimestampableTrait {
         EntityTimestampableTrait::__construct as private __TimestampableConstruct;
     }
-
     use EntityNameTrait;
     use EntityStatusTrait;
-
     /**
      * @var string
-     *
-     * @ORM\Column(name="block_key", type="string", nullable=false, unique=true)
-     * @Assert\NotBlank
-     * @Assert\Type("string")
      */
+    #[ORM\Column(name: 'block_key', type: 'string', nullable: false, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     protected $key;
-
     /**
      * @var string
-     *
-     * @ORM\Column(name="type", type="string", nullable=false)
-     * @Assert\NotBlank
-     * @Assert\Type("string")
      */
+    #[ORM\Column(name: 'type', type: 'string', nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     protected $type;
-
     /**
      * @var array|null
-     *
-     * @ORM\Column(name="settings", type="json")
-     * @Assert\Type("array")
      */
+    #[ORM\Column(name: 'settings', type: 'json')]
+    #[Assert\Type('array')]
     protected $settings;
-
     public function __construct()
     {
         $this->__TimestampableConstruct();
         $this->settings = [];
     }
-
     /**
      * @return string
      */
@@ -63,7 +51,6 @@ class Block {
     {
         return $this->key;
     }
-
     /**
      * @param string $key
      */
@@ -71,9 +58,6 @@ class Block {
     {
         $this->key = $key;
     }
-
-
-
     /**
      * @return string
      */
@@ -81,7 +65,6 @@ class Block {
     {
         return $this->type;
     }
-
     /**
      * @param string $type
      */
@@ -89,8 +72,6 @@ class Block {
     {
         $this->type = $type;
     }
-
-
     /**
      * @return array|null
      */
@@ -98,7 +79,6 @@ class Block {
     {
         return $this->settings;
     }
-
     /**
      * @param array $settings
      */
