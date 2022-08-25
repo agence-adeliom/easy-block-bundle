@@ -6,12 +6,8 @@ use Adeliom\EasyBlockBundle\Entity\Block;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
-
-class BlockRepository extends ServiceEntityRepository {
-
-    /**
-     * @return QueryBuilder
-     */
+class BlockRepository extends ServiceEntityRepository
+{
     public function getPublishedQuery(): QueryBuilder
     {
         $qb = $this->createQueryBuilder('block')

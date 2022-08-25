@@ -2,7 +2,6 @@
 
 namespace Adeliom\EasyBlockBundle\Block;
 
-
 use Adeliom\EasyBlockBundle\Entity\Block;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -19,93 +18,73 @@ class Helper
     /**
      * This property is a state variable holdings all assets used by the block for the current PHP request
      * It is used to correctly render the javascripts and stylesheets tags on the main layout.
-     *
-     * @var array
      */
-    private $assets;
+    private array $assets = [
+        'js' => [],
+        'css' => [],
+        'webpack' => [],
+    ];
 
-    /**
-     * @var array
-     */
-    private $traces;
+    private array $traces = [];
 
-    /**
-     * @var BlockCollection
-     */
-    private $collection;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * @var string
-     */
-    private $class;
-
-    /**
-     * @var FormFactory
-     */
-    private $formFactory;
-
-    public function __construct(Environment $twig, EventDispatcherInterface $eventDispatcher, BlockCollection $collection, EntityManagerInterface $em, string $class, FormFactory  $formFactory)
-    {
-        $this->twig = $twig;
-        $this->collection = $collection;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->em = $em;
-        $this->class = $class;
-        $this->formFactory = $formFactory;
-
-        $this->assets = [
-            'js' => [],
-            'css' => [],
-            'webpack' => [],
-        ];
-
-        $this->traces = [];
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private Environment $twig,
+        /**
+         * @readonly
+         */
+        private EventDispatcherInterface $eventDispatcher,
+        /**
+         * @readonly
+         */
+        private BlockCollection $collection,
+        /**
+         * @readonly
+         */
+        private EntityManagerInterface $em,
+        /**
+         * @readonly
+         */
+        private string $class,
+        /**
+         * @readonly
+         */
+        private FormFactory $formFactory
+    ) {
     }
 
     /**
-     * @return array|string
+     * @return mixed[]|string
      */
-    public function includeAssets()
+    public function includeAssets(): array|string
     {
         $html = '';
 
-        if (!empty($this->assets['css'])){
+        if (!empty($this->assets['css'])) {
             $html .= "<style media='all'>";
 
             foreach ($this->assets['css'] as $stylesheet) {
-                $html .= "\n".sprintf('@import url(%s);', $stylesheet);
+                $html .= "\n" . sprintf('@import url(%s);', $stylesheet);
             }
 
             $html .= "\n</style>";
         }
 
         foreach ($this->assets['js'] as $javascript) {
-            $html .= "\n".sprintf('<script src="%s" type="text/javascript"></script>', $javascript);
+            $html .= "\n" . sprintf('<script src="%s" type="text/javascript"></script>', $javascript);
         }
 
         foreach ($this->assets['webpack'] as $webpack) {
             try {
                 $html .= "\n" . $this->twig->createTemplate(sprintf("{{ encore_entry_link_tags('%s') }}", $webpack))->render();
-                $html .= "\n".$this->twig->createTemplate(sprintf("{{ encore_entry_script_tags('%s') }}", $webpack))->render();
-            } catch (LoaderError | SyntaxError $e) {
+                $html .= "\n" . $this->twig->createTemplate(sprintf("{{ encore_entry_script_tags('%s') }}", $webpack))->render();
+            } catch (LoaderError | SyntaxError) {
                 $html .= "";
             }
         }
+
         return $html;
     }
 
@@ -141,8 +120,6 @@ class Helper
     }
 
     /**
-     * @param Environment $env
-     * @param array $context
      * @param array $datas
      * @param array $extra
      * @return Markup|null
@@ -153,16 +130,16 @@ class Helper
     public function renderEasyBlock(Environment $env, array $context, $datas, $extra = [])
     {
         $block = null;
-        if(is_array($datas)){
+        if (is_array($datas)) {
             $block = $this->em->getRepository($datas["class"])->find($datas["id"]);
         }
 
-        if(is_string($datas)){
+        if (is_string($datas)) {
             $block = $this->em->getRepository($this->class)->findOneBy(['key' => $datas]);
         }
 
 
-        if(!$block || !$block->getStatus()){
+        if (!$block || !$block->getStatus()) {
             return null;
         }
 
@@ -181,7 +158,8 @@ class Helper
             if (empty($blockLoopIndex)) {
                 $blockLoopIndex = 0;
             }
-            $blockLoopIndex++;
+
+            ++$blockLoopIndex;
             $blockSettings['attr_id'] = 'block-' . $blockLoopIndex;
         }
 
@@ -204,11 +182,11 @@ class Helper
         $blockDatas = $result->getArgument('settings');
 
         // Stats
-        if(isset($blockDatas["block_type"])){
+        if (isset($blockDatas["block_type"])) {
             unset($blockDatas["block_type"]);
         }
 
-        if(isset($blockDatas["position"])){
+        if (isset($blockDatas["position"])) {
             $stats["position"] = $blockDatas["position"];
             unset($blockDatas["position"]);
         }
@@ -216,7 +194,7 @@ class Helper
         $stats["defaultSettings"] = $defaultSetting;
         $stats["settings"] = $blockDatas;
         $stats["extra"] = $extra;
-        $stats["type"] = get_class($blockType);
+        $stats["type"] = $blockType::class;
         $stats["assets"] = $result->getArgument('assets') ?: [];
 
         $this->assets = array_merge_recursive($this->assets, $stats["assets"]);
@@ -231,7 +209,8 @@ class Helper
         ], $extra)), 'UTF-8');
     }
 
-    public function transformSettingsWithBlockTypeFormBuild($blockType, $block, $defaultSetting) {
+    public function transformSettingsWithBlockTypeFormBuild($blockType, $block, $defaultSetting)
+    {
 
         $formBuilder = $this->formFactory->createBuilder($block->getType(), null, ['csrf_protection' => false]);
 

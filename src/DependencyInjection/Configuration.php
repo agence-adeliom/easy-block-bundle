@@ -8,7 +8,6 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
-
 /**
  * This is the class that validates and merges configuration from your app/config files.
  *
@@ -19,7 +18,7 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('easy_block');
         $rootNode    = $treeBuilder->getRootNode();
@@ -31,13 +30,15 @@ class Configuration implements ConfigurationInterface
                     ->isRequired()
                     ->validate()
                         ->ifString()
-                        ->then(function($value) {
+                        ->then(static function ($value) {
                             if (!class_exists($value) || !is_a($value, Block::class, true)) {
                                 throw new InvalidConfigurationException(sprintf(
                                     'Block class must be a valid class extending %s. "%s" given.',
-                                    Block::class, $value
+                                    Block::class,
+                                    $value
                                 ));
                             }
+
                             return $value;
                         })
                     ->end()
@@ -46,13 +47,15 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(BlockRepository::class)
                     ->validate()
                         ->ifString()
-                        ->then(function($value) {
+                        ->then(static function ($value) {
                             if (!class_exists($value) || !is_a($value, BlockRepository::class, true)) {
                                 throw new InvalidConfigurationException(sprintf(
                                     'Block repository must be a valid class extending %s. "%s" given.',
-                                    BlockRepository::class, $value
+                                    BlockRepository::class,
+                                    $value
                                 ));
                             }
+
                             return $value;
                         })
                     ->end()

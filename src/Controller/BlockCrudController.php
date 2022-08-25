@@ -5,7 +5,6 @@ namespace Adeliom\EasyBlockBundle\Controller;
 use Adeliom\EasyBlockBundle\Admin\Field\BlockSettingsField;
 use Adeliom\EasyBlockBundle\Block\BlockCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -45,21 +44,22 @@ abstract class BlockCrudController extends AbstractCrudController
                 $actions->add($page, $action->getAsConfigObject());
             }
         }
+
         return $actions;
     }
 
     public static function getSubscribedServices(): array
     {
         return array_merge(parent::getSubscribedServices(), [
-            'easy_block.block_collection' => '?'.BlockCollection::class
+            'easy_block.block_collection' => '?' . BlockCollection::class
         ]);
     }
 
-    public function new(AdminContext $context)
+    public function new(AdminContext $context): \EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         global $blockType;
         $blockType = $context->getRequest()->query->get('block_type');
-        if(!$blockType){
+        if (!$blockType) {
             $blockCollection = $this->container->get("easy_block.block_collection");
             return $this->render("@EasyBlock/crud/choose_block.html.twig", [
                 "blocks" => $blockCollection->getBlocks()
@@ -88,34 +88,37 @@ abstract class BlockCrudController extends AbstractCrudController
         $context = $this->get(AdminContextProvider::class)->getContext();
         $subject = $context->getEntity();
 
-        if($subject->getInstance() && $subject->getInstance()->getType()){
+        if ($subject->getInstance() && $subject->getInstance()->getType()) {
             $blockType = $subject->getInstance()->getType();
         }
 
         if (!empty($blockType)) {
-            if (method_exists($blockType,'configureAdminAssets')){
+            if (method_exists($blockType, 'configureAdminAssets')) {
                 $assets = call_user_func([$blockType,'configureAdminAssets']);
-                if(!empty($assets['js'])){
-                    foreach ($assets['js'] as $file){
+                if (!empty($assets['js'])) {
+                    foreach ($assets['js'] as $file) {
                         $found = false;
                         foreach ($context->getAssets()->getJsAssets() as $assetDto) {
                             if ($assetDto->getValue() === $file) {
                                 $found = true;
                             }
                         }
+
                         if (!$found) {
                             $context->getAssets()->addJsAsset(new AssetDto($file));
                         }
                     }
                 }
-                if(!empty($assets['css'])){
-                    foreach ($assets['css'] as $file){
+
+                if (!empty($assets['css'])) {
+                    foreach ($assets['css'] as $file) {
                         $found = false;
                         foreach ($context->getAssets()->getCssAssets() as $assetDto) {
                             if ($assetDto->getValue() === $file) {
                                 $found = true;
                             }
                         }
+
                         if (!$found) {
                             $context->getAssets()->addCssAsset(new AssetDto($file));
                         }
@@ -123,9 +126,9 @@ abstract class BlockCrudController extends AbstractCrudController
                 }
             }
 
-            if (method_exists($blockType,'configureAdminFormTheme')){
+            if (method_exists($blockType, 'configureAdminFormTheme')) {
                 $formThemes = call_user_func([$blockType,'configureAdminFormTheme']);
-                if(!empty($formThemes) && $context->getCrud()){
+                if (!empty($formThemes) && $context->getCrud()) {
                     $context->getCrud()->setFormThemes(array_merge($context->getCrud()->getFormThemes(), $formThemes));
                 }
             }
@@ -133,13 +136,12 @@ abstract class BlockCrudController extends AbstractCrudController
 
         yield TextField::new('name', "easy.block.admin.field.name")->setRequired(true)->setColumns(4);
         yield SlugField::new('key', "easy.block.admin.field.key")->setRequired(true)->setColumns(4)->hideWhenUpdating()->setTargetFieldName("name");
-        yield TextField::new('type', "easy.block.admin.field.type")->setRequired(true)->setColumns(4)->setFormTypeOption('disabled','disabled');
+        yield TextField::new('type', "easy.block.admin.field.type")->setRequired(true)->setColumns(4)->setFormTypeOption('disabled', 'disabled');
         yield BooleanField::new('status', "easy.block.admin.field.status")->setColumns(12);
 
-        if($blockType && in_array($pageName, [Crud::PAGE_NEW, Crud::PAGE_EDIT])){
+        if ($blockType && in_array($pageName, [Crud::PAGE_NEW, Crud::PAGE_EDIT])) {
             yield FormField::addPanel("easy.block.admin.field.settings_section");
             yield BlockSettingsField::new('settings', false)->setFormType($blockType);
         }
     }
-
 }

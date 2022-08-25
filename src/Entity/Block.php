@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
-#[ORM\MappedSuperclass(repositoryClass: 'Adeliom\EasyBlockBundle\Repository\BlockRepository')]
+#[ORM\MappedSuperclass(repositoryClass: \Adeliom\EasyBlockBundle\Repository\BlockRepository::class)]
 class Block
 {
     use EntityIdTrait;
@@ -19,69 +19,60 @@ class Block
     }
     use EntityNameTrait;
     use EntityStatusTrait;
+
     /**
      * @var string
      */
-    #[ORM\Column(name: 'block_key', type: 'string', nullable: false, unique: true)]
+    #[ORM\Column(name: 'block_key', type: \Doctrine\DBAL\Types\Types::STRING, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Type('string')]
-    protected $key;
+    protected ?string $key = null;
+
     /**
      * @var string
      */
-    #[ORM\Column(name: 'type', type: 'string', nullable: false)]
+    #[ORM\Column(name: 'type', type: \Doctrine\DBAL\Types\Types::STRING)]
     #[Assert\NotBlank]
     #[Assert\Type('string')]
-    protected $type;
+    protected ?string $type = null;
+
     /**
      * @var array|null
      */
-    #[ORM\Column(name: 'settings', type: 'json')]
+    #[ORM\Column(name: 'settings', type: \Doctrine\DBAL\Types\Types::JSON)]
     #[Assert\Type('array')]
-    protected $settings;
+    protected $settings = [];
+
     public function __construct()
     {
-        $this->__TimestampableConstruct();
-        $this->settings = [];
+        $this->TimestampableConstruct();
     }
-    /**
-     * @return string
-     */
+
     public function getKey(): string
     {
         return $this->key;
     }
-    /**
-     * @param string $key
-     */
+
     public function setKey(string $key)
     {
         $this->key = $key;
     }
-    /**
-     * @return string
-     */
+
     public function getType(): string
     {
         return $this->type;
     }
-    /**
-     * @param string $type
-     */
+
     public function setType(string $type): void
     {
         $this->type = $type;
     }
-    /**
-     * @return array|null
-     */
+
     public function getSettings(): ?array
     {
         return $this->settings;
     }
-    /**
-     * @param array $settings
-     */
+
     public function setSettings(array $settings): void
     {
         $this->settings = $settings;

@@ -23,12 +23,12 @@ class EasyBlockExtension extends Extension
             ->addTag('easy_block.block')
         ;
 
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yaml');
     }
 
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'easy_block';
     }

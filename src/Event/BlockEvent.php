@@ -8,18 +8,16 @@ use Symfony\Contracts\EventDispatcher\Event;
 final class BlockEvent extends Event
 {
     /**
-     * @var array
-     */
-    private $settings;
-
-    /**
      * @var BlockInterface[]
      */
-    private $blocks = [];
+    private array $blocks = [];
 
-    public function __construct(array $settings = [])
-    {
-        $this->settings = $settings;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private array $settings = []
+    ) {
     }
 
     public function addBlock(BlockInterface $block): void
@@ -41,11 +39,9 @@ final class BlockEvent extends Event
     }
 
     /**
-     * @param mixed $default
-     *
      * @return mixed
      */
-    public function getSetting(string $name, $default = null)
+    public function getSetting(string $name, mixed $default = null)
     {
         return $this->settings[$name] ?? $default;
     }
