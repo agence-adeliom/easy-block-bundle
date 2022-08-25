@@ -15,7 +15,7 @@ class Block
 {
     use EntityIdTrait;
     use EntityTimestampableTrait {
-        EntityTimestampableTrait::__construct as private __TimestampableConstruct;
+        EntityTimestampableTrait::__construct as private TimestampableConstruct;
     }
     use EntityNameTrait;
     use EntityStatusTrait;
