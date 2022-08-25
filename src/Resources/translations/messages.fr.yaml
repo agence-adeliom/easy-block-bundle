@@ -1,0 +1,35 @@
+easy:
+  block:
+    editor:
+      shared_block: "Bloc partagé"
+    admin:
+      crud:
+        title:
+          shared_block:
+            edit: Editer le bloc partagé
+            index: Liste des blocs partagé
+            new: Nouveau bloc partagé
+            detail: Détail du bloc partagé
+        label:
+          shared_block:
+            singular: un bloc partagé
+            plural: des blocs partagé
+            new: Nouveau bloc partagé
+            edit: Editer
+            delete: Supprimer
+            saveAndReturn: Enregistrer le bloc et retourner à la liste
+            saveAndContinue: Enregistrer le bloc et rester sur cette page
+            saveAndAddAnother: Enregistrer le bloc puis en créer une autre
+      menu:
+        shared_blocks: Blocs partagés
+      panel:
+        information: Informations
+        metadatas: Métadonnées
+        seo: SEO
+        publication: Publication
+      field:
+        name: "Nom du bloc"
+        type: "Type"
+        key: "Clé"
+        status: "Statut"
+        settings_section: "Paramètres"

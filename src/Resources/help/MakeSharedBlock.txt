@@ -1,0 +1,5 @@
+The <info>%command.name%</info> command generates a new shared block type.
+
+<info>php %command.full_name% CoolStuffType</info>
+
+If the argument is missing, the command will ask for the shared block type name interactively.

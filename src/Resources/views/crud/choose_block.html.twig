@@ -1,0 +1,51 @@
+{% extends ea.templatePath('layout') %}
+{% block search %}{% endblock %}
+
+{% block head_stylesheets %}
+    {{- parent() -}}
+    <style>
+
+        .block-card .card-header{
+            text-align: center;
+        }
+        .block-card .card-header img{
+            max-width: 100%;
+            height: auto;
+        }
+
+        .block-card .card-header .fa{
+            font-size: 4rem;
+            padding: 2rem 1rem;
+        }
+    </style>
+{% endblock %}
+
+{% block content_title %}
+    {%- apply spaceless -%}
+        {% set custom_page_title = "Choisir le type de bloc" %}
+        {{ (custom_page_title|trans(ea.i18n.translationParameters))|raw }}
+    {%- endapply -%}
+{% endblock %}
+
+{% block main %}
+
+    <div class="row">
+        {% for type, block in blocks %}
+            <div class="col-sm-3 col-xxl-2">
+                <div class="card block-card">
+                    {% if block.icon %}
+                        <div class="card-header p-0">
+                            {{ block.icon|raw }}
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ block.name }}</h5>
+                        <p class="card-text">{{ block.description }}</p>
+                        <a href="{{ ea_url().set('block_type', type) }}" class="btn btn-primary">{{ "action.create"|trans(ea.i18n.translationParameters, 'EasyAdminBundle') }}</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
