@@ -18,5 +18,4 @@ class EasyBlockExtension extends AbstractExtension
             new TwigFunction('easy_block_assets', [Helper::class, 'includeAssets'], ['is_safe' => ['js', 'html'], 'needs_context' => true, 'needs_environment' => true]),
         ];
     }
-
 }

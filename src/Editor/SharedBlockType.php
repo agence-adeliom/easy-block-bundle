@@ -1,4 +1,5 @@
 <?php
+
 namespace Adeliom\EasyBlockBundle\Editor;
 
 use Adeliom\EasyEditorBundle\Block\AbstractBlock;
@@ -12,14 +13,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SharedBlockType extends AbstractBlock implements BlockInterface
 {
-    protected $class;
-    protected $translator;
-
-    public function __construct(EntityManagerInterface $manager, TranslatorInterface $translator, string $class)
+    public function __construct(EntityManagerInterface $manager, protected TranslatorInterface $translator, protected string $class)
     {
         parent::__construct($manager);
-        $this->class = $class;
-        $this->translator = $translator;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -31,40 +27,42 @@ class SharedBlockType extends AbstractBlock implements BlockInterface
     public function buildBlock(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add("block", EntityType::class, [
-                "class" => $this->class,
-                "required" => true,
-                "attr" => [
-                    'data-ea-widget' => 'ea-autocomplete'
+            ->add('block', EntityType::class, [
+                'class' => $this->class,
+                'required' => true,
+                'attr' => [
+                    'data-ea-widget' => 'ea-autocomplete',
                 ],
-                "constraints" => [
-                    new NotBlank()
-                ]
+                'constraints' => [
+                    new NotBlank(),
+                ],
             ])
         ;
     }
 
-    public function getTransformer(){
+    public function getTransformer()
+    {
         return new CallbackTransformer(
             function ($data) {
-                if ($data && $data["block"]){
-                    $data["block"] = $this->manager->getRepository($data["block"]["class"])->find($data["block"]["id"]);
+                if ($data && $data['block']) {
+                    $data['block'] = $this->manager->getRepository($data['block']['class'])->find($data['block']['id']);
                 }
+
                 return $data;
             },
             function ($data) {
-                if ($data["block"]){
-                    $data["block"] = ["class" => $this->class, "id" => $data["block"]->getId()];
+                if ($data['block']) {
+                    $data['block'] = ['class' => $this->class, 'id' => $data['block']->getId()];
                 }
+
                 return $data;
             }
         );
     }
 
-
     public function getName(): string
     {
-        return $this->translator->trans("easy.block.editor.shared_block");
+        return $this->translator->trans('easy.block.editor.shared_block');
     }
 
     public function getIcon(): string
@@ -74,6 +72,6 @@ class SharedBlockType extends AbstractBlock implements BlockInterface
 
     public function getTemplate(): string
     {
-        return "@EasyBlock/editor/shared_block.html.twig";
+        return '@EasyBlock/editor/shared_block.html.twig';
     }
 }

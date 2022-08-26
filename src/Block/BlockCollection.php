@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Adeliom\EasyBlockBundle\Block;
-
 
 class BlockCollection
 {
@@ -11,8 +9,8 @@ class BlockCollection
 
     public function __construct(iterable $blocks)
     {
-        foreach($blocks as $block) {
-            $this->blocks[get_class($block)] = $block;
+        foreach ($blocks as $block) {
+            $this->blocks[$block::class] = $block;
         }
     }
 
