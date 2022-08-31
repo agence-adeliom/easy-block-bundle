@@ -20,8 +20,6 @@ abstract class BlockCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->addFormTheme('@EasyCommon/crud/custom_panel.html.twig')
-
             ->setPageTitle(Crud::PAGE_INDEX, 'easy.block.admin.crud.title.shared_block.'.Crud::PAGE_INDEX)
             ->setPageTitle(Crud::PAGE_EDIT, 'easy.block.admin.crud.title.shared_block.'.Crud::PAGE_EDIT)
             ->setPageTitle(Crud::PAGE_NEW, 'easy.block.admin.crud.title.shared_block.'.Crud::PAGE_NEW)
