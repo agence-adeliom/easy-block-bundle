@@ -137,7 +137,11 @@ class Helper
         }
 
         if (is_string($datas)) {
-            $block = $this->em->getRepository($this->class)->findOneBy(['key' => $datas]);
+            if (is_numeric($datas)) {
+                $block = $this->em->getRepository($this->class)->findOneBy(['id' => $datas]);
+            } else {
+                $block = $this->em->getRepository($this->class)->findOneBy(['key' => $datas]);
+            }
         }
 
         if (!$block || !$block->getStatus()) {
