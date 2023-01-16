@@ -83,7 +83,7 @@ abstract class BlockCrudController extends AbstractCrudController
         global $blockType;
 
         $context = $this->container->get(AdminContextProvider::class)->getContext();
-        $subject = $context->getEntity();
+        $subject = $context?->getEntity();
 
         if ($subject->getInstance() && $subject->getInstance()->getType()) {
             $blockType = $subject->getInstance()->getType();
