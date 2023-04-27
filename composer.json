@@ -2,11 +2,7 @@
     "name": "agence-adeliom/easy-block-bundle",
     "type": "symfony-bundle",
     "description": "A Symfony bundle for EasyAdmin that provide basic blocks components",
-    "keywords": [
-        "symfony",
-        "easyadmin",
-        "blocks"
-    ],
+    "keywords": ["symfony", "easyadmin", "blocks"],
     "homepage": "https://github.com/agence-adeliom/easy-block-bundle",
     "license": "MIT",
     "authors": [
@@ -28,8 +24,8 @@
         "symfony/options-resolver": "^5.4 || ^6.0",
         "symfony/property-access": "^5.4 || ^6.0",
         "easycorp/easyadmin-bundle": "^3.4 || ^v4.0",
-        "agence-adeliom/easy-common-bundle": "^2.1",
-        "agence-adeliom/easy-editor-bundle": "^2.1"
+        "agence-adeliom/easy-common-bundle": "^2.0.93",
+        "agence-adeliom/easy-editor-bundle": "^2.0.93"
     },
     "autoload": {
         "psr-4": {
