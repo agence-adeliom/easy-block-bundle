@@ -196,11 +196,24 @@ class Helper
             unset($blockDatas['position']);
         }
 
-        $stats['defaultSettings'] = $defaultSetting;
-        $stats['settings'] = $blockDatas;
-        $stats['extra'] = $extra;
-        $stats['type'] = $blockType::class;
-        $stats['assets'] = $result->getArgument('assets') ?: [];
+        $event = new GenericEvent(null, [
+            'defaultSettings' => $defaultSetting,
+            'settings' => $blockDatas,
+            'extra' => $extra,
+            'type' => $blockType::class,
+            'assets' => $result->getArgument('assets') ?: [],
+        ]);
+
+        /**
+         * @var GenericEvent $result;
+         */
+        $statsEvent = $this->eventDispatcher->dispatch($event, 'easy_block.tracing.settings');
+
+        $stats['defaultSettings'] = $statsEvent->getArgument('defaultSettings');
+        $stats['settings'] = $statsEvent->getArgument('settings');
+        $stats['extra'] = $statsEvent->getArgument('extra');
+        $stats['type'] = $statsEvent->getArgument('type');
+        $stats['assets'] = $statsEvent->getArgument('assets');
 
         $this->assets = array_merge_recursive($this->assets, $stats['assets']);
 
