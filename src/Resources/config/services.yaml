@@ -11,7 +11,7 @@ services:
         autoconfigure: true
         public: true
         arguments:
-            - !tagged easy_block.block
+            - !tagged_iterator easy_block.block
 
     easy_block.block_collection:
         alias: Adeliom\EasyBlockBundle\Block\BlockCollection
