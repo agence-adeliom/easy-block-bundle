@@ -51,7 +51,7 @@ abstract class AbstractBlock extends AbstractType implements BlockInterface
     }
 
     /**
-     * @return array<string, string[]>
+     * @return array{js: ?string[], css: ?string[], webpack: ?string[]}
      */
     public static function configureAssets(): array
     {
@@ -63,7 +63,7 @@ abstract class AbstractBlock extends AbstractType implements BlockInterface
     }
 
     /**
-     * @return array<string, string[]>
+     * @return array{js: ?string[], css: ?string[], webpack: ?string[]}
      */
     public static function configureAdminAssets(): array
     {

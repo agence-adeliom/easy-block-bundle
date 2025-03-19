@@ -9,10 +9,7 @@ final class BlockSettingsField implements FieldInterface
 {
     use FieldTrait;
 
-    /**
-     * @param string|false|null $label
-     */
-    public static function new(string $propertyName, $label = false): self
+    public static function new(string $propertyName, string|false|null $label = false): self
     {
         return (new self())
             ->setProperty($propertyName)

@@ -20,28 +20,19 @@ class Block
     use EntityNameTrait;
     use EntityStatusTrait;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'block_key', type: \Doctrine\DBAL\Types\Types::STRING, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     protected ?string $key = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'type', type: \Doctrine\DBAL\Types\Types::STRING)]
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     protected ?string $type = null;
 
-    /**
-     * @var array|null
-     */
     #[ORM\Column(name: 'settings', type: \Doctrine\DBAL\Types\Types::JSON)]
     #[Assert\Type('array')]
-    protected $settings = [];
+    protected array $settings = [];
 
     public function __construct()
     {
@@ -68,7 +59,7 @@ class Block
         $this->type = $type;
     }
 
-    public function getSettings(): ?array
+    public function getSettings(): array
     {
         return $this->settings;
     }

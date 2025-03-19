@@ -18,10 +18,7 @@ final class BlockCollector extends AbstractDataCollector
         $this->data['blocks'] = $this->blockHelper->getTraces();
     }
 
-    /**
-     * @return array
-     */
-    public function getBlocks()
+    public function getBlocks(): array
     {
         return $this->data['blocks'] ?: [];
     }

@@ -16,7 +16,7 @@ interface BlockInterface
     public function getTemplate(): string;
 
     /**
-     * @return array<string, string[]>
+     * @return array{js: ?string[], css: ?string[], webpack: ?string[]}
      */
     public static function configureAssets(): array;
 
@@ -26,7 +26,7 @@ interface BlockInterface
     public static function getDefaultSettings(): array;
 
     /**
-     * @return array<string, string[]>
+     * @return array{js: ?string[], css: ?string[], webpack: ?string[]}
      */
     public static function configureAdminAssets(): array;
 
