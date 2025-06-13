@@ -137,7 +137,7 @@ abstract class BlockCrudController extends AbstractCrudController
         yield BooleanField::new('status', 'easy.block.admin.field.status')->setColumns(12);
 
         if ($blockType && in_array($pageName, [Crud::PAGE_NEW, Crud::PAGE_EDIT])) {
-            yield FormField::addPanel('easy.block.admin.field.settings_section');
+            yield FormField::addFieldset('easy.block.admin.field.settings_section');
             yield BlockSettingsField::new('settings', false)->setFormType($blockType);
         }
     }
