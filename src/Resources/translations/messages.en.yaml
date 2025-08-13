@@ -30,5 +30,6 @@ easy:
       field:
         name: "Block name"
         type: "Type"
+        key: "Key"
         status: "Status"
         settings_section: "Parameters"
