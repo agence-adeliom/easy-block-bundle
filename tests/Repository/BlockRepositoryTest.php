@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Adeliom\EasyBlockBundle\Tests\Repository;
 
 use Adeliom\EasyBlockBundle\Repository\BlockRepository;
-use Doctrine\ORM\Query;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +26,7 @@ final class BlockRepositoryTest extends TestCase
 
     public function testGetActiveReturnsQueryResults(): void
     {
-        $query = $this->createMock(Query::class);
+        $query = $this->createMock(AbstractQuery::class);
         $query->expects(self::once())->method('getResult')->willReturn(['block']);
 
         $builder = $this->createConfiguredBuilder($query);
@@ -37,7 +37,7 @@ final class BlockRepositoryTest extends TestCase
 
     public function testGetByTypeAddsTypeFilterAndReturnsResults(): void
     {
-        $query = $this->createMock(Query::class);
+        $query = $this->createMock(AbstractQuery::class);
         $query->expects(self::once())->method('getResult')->willReturn(['hero']);
 
         $builder = $this->createConfiguredBuilder($query);
@@ -56,7 +56,7 @@ final class BlockRepositoryTest extends TestCase
         self::assertSame([['state', true], ['type', 'hero']], $calls);
     }
 
-    private function createConfiguredBuilder(?Query $query = null): QueryBuilder
+    private function createConfiguredBuilder(?AbstractQuery $query = null): QueryBuilder
     {
         $builder = $this->getMockBuilder(QueryBuilder::class)
             ->disableOriginalConstructor()
@@ -66,7 +66,7 @@ final class BlockRepositoryTest extends TestCase
         $builder->method('where')->willReturnSelf();
         $builder->method('setParameter')->willReturnSelf();
         $builder->method('andWhere')->willReturnSelf();
-        $builder->method('getQuery')->willReturn($query ?? $this->createMock(Query::class));
+        $builder->method('getQuery')->willReturn($query ?? $this->createMock(AbstractQuery::class));
 
         return $builder;
     }
