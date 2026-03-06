@@ -67,7 +67,7 @@ abstract class BlockCrudController extends AbstractCrudController
         return parent::new($context);
     }
 
-    public function createEntity(string $entityFqcn)
+    public function createEntity(string $entityFqcn): object
     {
         global $blockType;
         $entity = new $entityFqcn();

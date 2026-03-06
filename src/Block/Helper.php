@@ -3,9 +3,10 @@
 namespace Adeliom\EasyBlockBundle\Block;
 
 use Adeliom\EasyBlockBundle\Entity\Block;
+use Adeliom\EasyBlockBundle\Event\RenderBlockEvent;
+use Adeliom\EasyBlockBundle\Event\TraceableBlockSettingsEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\Form\FormFactory;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -151,22 +152,11 @@ class Helper
         }
 
         // Tranform settings way 2 : with dispatch / event listeners
-        $event = new GenericEvent(null, [
-            'datas' => $datas,
-            'block' => $block,
-            'blockType' => $blockType,
-            'settings' => $blockSettings,
-            'assets' => $defaultAssets,
-        ]);
+        $result = $this->eventDispatcher->dispatch(new RenderBlockEvent($datas, $block, $blockType, $blockSettings, $defaultAssets));
 
-        /**
-         * @var GenericEvent $result;
-         */
-        $result = $this->eventDispatcher->dispatch($event, 'easy_block.render_block');
-
-        $block = $result->getArgument('block');
-        $blockType = $result->getArgument('blockType');
-        $blockDatas = $result->getArgument('settings');
+        $block = $result->getBlock();
+        $blockType = $result->getBlockType();
+        $blockDatas = $result->getSettings();
 
         // Stats
         if (isset($blockDatas['block_type'])) {
@@ -178,24 +168,19 @@ class Helper
             unset($blockDatas['position']);
         }
 
-        $event = new GenericEvent(null, [
-            'defaultSettings' => $defaultSetting,
-            'settings' => $blockDatas,
-            'extra' => $extra,
-            'type' => $blockType::class,
-            'assets' => $result->getArgument('assets') ?: [],
-        ]);
+        $statsEvent = $this->eventDispatcher->dispatch(new TraceableBlockSettingsEvent(
+            $defaultSetting,
+            $blockDatas,
+            $extra,
+            $blockType::class,
+            $result->getAssets() ?: [],
+        ));
 
-        /**
-         * @var GenericEvent $result;
-         */
-        $statsEvent = $this->eventDispatcher->dispatch($event, 'easy_block.tracing.settings');
-
-        $stats['defaultSettings'] = $statsEvent->getArgument('defaultSettings');
-        $stats['settings'] = $statsEvent->getArgument('settings');
-        $stats['extra'] = $statsEvent->getArgument('extra');
-        $stats['type'] = $statsEvent->getArgument('type');
-        $stats['assets'] = $statsEvent->getArgument('assets');
+        $stats['defaultSettings'] = $statsEvent->getDefaultSettings();
+        $stats['settings'] = $statsEvent->getSettings();
+        $stats['extra'] = $statsEvent->getExtra();
+        $stats['type'] = $statsEvent->getType();
+        $stats['assets'] = $statsEvent->getAssets();
 
         $this->assets = array_merge_recursive($this->assets, $stats['assets']);
 
