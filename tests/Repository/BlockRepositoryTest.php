@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Adeliom\EasyBlockBundle\Tests\Repository;
 
 use Adeliom\EasyBlockBundle\Repository\BlockRepository;
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -26,21 +25,15 @@ final class BlockRepositoryTest extends TestCase
 
     public function testGetActiveReturnsQueryResults(): void
     {
-        $query = $this->createMock(AbstractQuery::class);
-        $query->expects(self::once())->method('getResult')->willReturn(['block']);
-
-        $builder = $this->createConfiguredBuilder($query);
-        $repository = new BlockRepositoryHarness($builder);
+        $builder = $this->createConfiguredBuilder();
+        $repository = new BlockRepositoryHarness($builder, ['block']);
 
         self::assertSame(['block'], $repository->getActive());
     }
 
     public function testGetByTypeAddsTypeFilterAndReturnsResults(): void
     {
-        $query = $this->createMock(AbstractQuery::class);
-        $query->expects(self::once())->method('getResult')->willReturn(['hero']);
-
-        $builder = $this->createConfiguredBuilder($query);
+        $builder = $this->createConfiguredBuilder();
         $builder->expects(self::once())->method('andWhere')->with('block.type = :type')->willReturnSelf();
         $calls = [];
         $builder->expects(self::exactly(2))->method('setParameter')
@@ -50,23 +43,22 @@ final class BlockRepositoryTest extends TestCase
                 return $builder;
             });
 
-        $repository = new BlockRepositoryHarness($builder);
+        $repository = new BlockRepositoryHarness($builder, ['hero']);
 
         self::assertSame(['hero'], $repository->getByType('hero'));
         self::assertSame([['state', true], ['type', 'hero']], $calls);
     }
 
-    private function createConfiguredBuilder(?AbstractQuery $query = null): QueryBuilder
+    private function createConfiguredBuilder(): QueryBuilder
     {
         $builder = $this->getMockBuilder(QueryBuilder::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['where', 'setParameter', 'andWhere', 'getQuery'])
+            ->onlyMethods(['where', 'setParameter', 'andWhere'])
             ->getMock();
 
         $builder->method('where')->willReturnSelf();
         $builder->method('setParameter')->willReturnSelf();
         $builder->method('andWhere')->willReturnSelf();
-        $builder->method('getQuery')->willReturn($query ?? $this->createMock(AbstractQuery::class));
 
         return $builder;
     }
@@ -74,12 +66,19 @@ final class BlockRepositoryTest extends TestCase
 
 final class BlockRepositoryHarness extends BlockRepository
 {
-    public function __construct(private QueryBuilder $builder)
-    {
+    public function __construct(
+        private QueryBuilder $builder,
+        private array $queryResult = [],
+    ) {
     }
 
     public function createQueryBuilder($alias, $indexBy = null): QueryBuilder
     {
         return $this->builder;
+    }
+
+    protected function executeQueryResult(QueryBuilder $qb): array
+    {
+        return $this->queryResult;
     }
 }

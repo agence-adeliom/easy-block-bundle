@@ -24,10 +24,7 @@ class BlockRepository extends ServiceEntityRepository
      */
     public function getActive()
     {
-        $qb = $this->getPublishedQuery();
-
-        return $qb->getQuery()
-            ->getResult();
+        return $this->executeQueryResult($this->getPublishedQuery());
     }
 
     /**
@@ -39,7 +36,11 @@ class BlockRepository extends ServiceEntityRepository
         $qb->andWhere('block.type = :type')
             ->setParameter('type', $type);
 
-        return $qb->getQuery()
-            ->getResult();
+        return $this->executeQueryResult($qb);
+    }
+
+    protected function executeQueryResult(QueryBuilder $qb): array
+    {
+        return $qb->getQuery()->getResult();
     }
 }
