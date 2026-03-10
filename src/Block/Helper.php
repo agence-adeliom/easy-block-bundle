@@ -2,10 +2,12 @@
 
 namespace Adeliom\EasyBlockBundle\Block;
 
-use Adeliom\EasyBlockBundle\Entity\Block;
 use Adeliom\EasyBlockBundle\Event\RenderBlockEvent;
 use Adeliom\EasyBlockBundle\Event\TraceableBlockSettingsEvent;
+use Adeliom\EasyCommonBundle\Event\LegacyEventDispatcher;
+use Adeliom\EasyBlockBundle\Entity\Block;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactory;
 use Twig\Environment;
@@ -152,7 +154,25 @@ class Helper
         }
 
         // Tranform settings way 2 : with dispatch / event listeners
-        $result = $this->eventDispatcher->dispatch(new RenderBlockEvent($datas, $block, $blockType, $blockSettings, $defaultAssets));
+        $result = LegacyEventDispatcher::dispatchGenericEvent(
+            new RenderBlockEvent($datas, $block, $blockType, $blockSettings, $defaultAssets),
+            $this->eventDispatcher,
+            'agence-adeliom/easy-block-bundle',
+            'easy_block.render_block',
+            static fn (RenderBlockEvent $event): GenericEvent => new GenericEvent(null, [
+                'datas' => $event->getDatas(),
+                'block' => $event->getBlock(),
+                'blockType' => $event->getBlockType(),
+                'settings' => $event->getSettings(),
+                'assets' => $event->getAssets(),
+            ]),
+            static function (RenderBlockEvent $event, GenericEvent $legacyEvent): void {
+                $event->setBlock($legacyEvent->getArgument('block'));
+                $event->setBlockType($legacyEvent->getArgument('blockType'));
+                $event->setSettings($legacyEvent->getArgument('settings'));
+                $event->setAssets($legacyEvent->getArgument('assets'));
+            }
+        );
 
         $block = $result->getBlock();
         $blockType = $result->getBlockType();
@@ -168,13 +188,32 @@ class Helper
             unset($blockDatas['position']);
         }
 
-        $statsEvent = $this->eventDispatcher->dispatch(new TraceableBlockSettingsEvent(
-            $defaultSetting,
-            $blockDatas,
-            $extra,
-            $blockType::class,
-            $result->getAssets() ?: [],
-        ));
+        $statsEvent = LegacyEventDispatcher::dispatchGenericEvent(
+            new TraceableBlockSettingsEvent(
+                $defaultSetting,
+                $blockDatas,
+                $extra,
+                $blockType::class,
+                $result->getAssets() ?: [],
+            ),
+            $this->eventDispatcher,
+            'agence-adeliom/easy-block-bundle',
+            'easy_block.tracing.settings',
+            static fn (TraceableBlockSettingsEvent $event): GenericEvent => new GenericEvent(null, [
+                'defaultSettings' => $event->getDefaultSettings(),
+                'settings' => $event->getSettings(),
+                'extra' => $event->getExtra(),
+                'type' => $event->getType(),
+                'assets' => $event->getAssets(),
+            ]),
+            static function (TraceableBlockSettingsEvent $event, GenericEvent $legacyEvent): void {
+                $event->setDefaultSettings($legacyEvent->getArgument('defaultSettings'));
+                $event->setSettings($legacyEvent->getArgument('settings'));
+                $event->setExtra($legacyEvent->getArgument('extra'));
+                $event->setType($legacyEvent->getArgument('type'));
+                $event->setAssets($legacyEvent->getArgument('assets'));
+            }
+        );
 
         $stats['defaultSettings'] = $statsEvent->getDefaultSettings();
         $stats['settings'] = $statsEvent->getSettings();
