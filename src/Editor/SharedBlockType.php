@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -58,6 +60,24 @@ class SharedBlockType extends AbstractBlock implements BlockInterface
                 return $data;
             }
         );
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options): void
+    {
+        parent::buildView($view, $form, $options);
+
+        $data = $form->getData();
+        if (!\is_array($data) || empty($data['block'])) {
+            return;
+        }
+
+        $block = $data['block'];
+        if (\is_object($block) && method_exists($block, 'getName')) {
+            $blockName = $block->getName();
+            if (!empty($blockName)) {
+                $view->vars['attr']['block-title'] .= ' - ' . $blockName;
+            }
+        }
     }
 
     public function getName(): string
