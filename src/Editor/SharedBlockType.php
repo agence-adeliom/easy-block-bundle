@@ -74,9 +74,13 @@ class SharedBlockType extends AbstractBlock implements BlockInterface
         $block = $data['block'];
         if (\is_object($block) && method_exists($block, 'getName')) {
             $blockName = $block->getName();
-            if (!empty($blockName)) {
-                $view->vars['attr']['block-title'] .= ' - ' . $blockName;
-            }
+        } elseif (\is_array($block) && !empty($block['id']) && !empty($block['class'])) {
+            $entity = $this->manager->getRepository($block['class'])->find($block['id']);
+            $blockName = $entity?->getName();
+        }
+
+        if (!empty($blockName ?? null)) {
+            $view->vars['attr']['block-title'] .= ' - ' . $blockName;
         }
     }
 
